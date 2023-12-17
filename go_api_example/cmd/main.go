@@ -5,6 +5,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"middleware/example/internal/controllers/collections"
 	"middleware/example/internal/controllers/users"
+	"middleware/example/internal/controllers/songs"
 	"middleware/example/internal/helpers"
 	"net/http"
 )
@@ -36,6 +37,17 @@ func main() {
 
     		})
     	})
+   r.Route("/songs", func(r chi.Router) {
+       		r.Get("/", songs.GetSongs)
+       		r.Post("/", songs.CreateSong)
+       		r.Route("/{id}", func(r chi.Router) {
+       			r.Use(songs.Ctx)
+       			r.Get("/", songs.GetSong)
+       			r.Put("/", songs.UpdateSong)
+       			r.Delete("/", songs.DeleteSong)
+
+       		})
+    	})
 	logrus.Info("[INFO] Web server started. Now listening on *:8081")
 	logrus.Fatalln(http.ListenAndServe(":8081", r))
 }
@@ -54,7 +66,12 @@ func init() {
         			id VARCHAR(255) PRIMARY KEY NOT NULL UNIQUE,
         			name VARCHAR(255) NOT NULL,
         			email VARCHAR(255) NOT NULL
-        		);`,
+        );`,
+        `CREATE TABLE IF NOT EXISTS songs (
+        			id VARCHAR(255) PRIMARY KEY NOT NULL UNIQUE,
+        			title VARCHAR(255) NOT NULL,
+        			artist VARCHAR(255) NOT NULL
+        );`,
 	}
 	for _, scheme := range schemes {
 		if _, err := db.Exec(scheme); err != nil {
