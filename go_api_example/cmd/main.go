@@ -65,7 +65,9 @@ func init() {
 		`CREATE TABLE IF NOT EXISTS users (
         			id VARCHAR(255) PRIMARY KEY NOT NULL UNIQUE,
         			name VARCHAR(255) NOT NULL,
-        			email VARCHAR(255) NOT NULL
+        			username VARCHAR(255) NOT NULL,
+        			password VARCHAR(255) NOT NULL
+
         );`,
         `CREATE TABLE IF NOT EXISTS songs (
         			id VARCHAR(255) PRIMARY KEY NOT NULL UNIQUE,

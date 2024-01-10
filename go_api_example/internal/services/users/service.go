@@ -49,9 +49,9 @@ func GetUserById(id uuid.UUID) (*models.User, error) {
 }
 
 // CreateUser creates a new user in the database.
-func CreateUser(name, email string) (*models.User, error) {
+func CreateUser(name, username, password string) (*models.User, error) {
 	// Call the repository to create a new user
-	createdUser, err := repository.CreateUser(name, email)
+	createdUser, err := repository.CreateUser(name, username, password)
 	if err != nil {
 		logrus.Errorf("error creating user: %s", err.Error())
 		return nil, &models.CustomError{
@@ -64,9 +64,9 @@ func CreateUser(name, email string) (*models.User, error) {
 }
 
 // UpdateUser updates a user in the database.
-func UpdateUser(id uuid.UUID, newName, newEmail string) (*models.User, error) {
+func UpdateUser(id uuid.UUID, newName, newUsername, newPassword string) (*models.User, error) {
 	// Call the repository to update the user
-	updatedUser, err := repository.UpdateUser(id, newName, newEmail)
+	updatedUser, err := repository.UpdateUser(id, newName, newUsername, newPassword)
 	if err != nil {
 		if err == repository.ErrUserNotFound {
 			return nil, &models.CustomError{
