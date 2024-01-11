@@ -3,27 +3,27 @@ from src.helpers import db
 class Song(db.Model):
     __tablename__ = 'songs'
 
-    Id = db.Column(db.String(255), primary_key=True)
-    Title = db.Column(db.String(255), nullable=False)
-    Artist = db.Column(db.String(255), nullable=False)
+    id = db.Column(db.String(255), primary_key=True)
+    title = db.Column(db.String(255), nullable=False)
+    artist = db.Column(db.String(255), nullable=False)
 
-    def __init__(self, uuid, Title, Artist):
-        self.Id = uuid
-        self.Title = Title
-        self.Artist = Artist
+    def __init__(self, uuid, title, artist):
+        self.id = uuid
+        self.title = title
+        self.artist = artist
 
 
     def is_empty(self):
-        return (not self.Id or self.Id == "") and \
-               (not self.Title or self.Title == "") and \
-               (not self.Artist or self.Artist == "")
+        return (not self.id or self.id == "") and \
+               (not self.title or self.title == "") and \
+               (not self.artist or self.artist == "")
 
     @staticmethod
     def from_dict(obj):
         return Song(
             uuid=obj.get("uuid"),
-            Title=obj.get("Title"),
-            Artist=obj.get("Artist")
+            title=obj.get("title"),
+            artist=obj.get("artist")
         )
 
 # Ajout du modèle pour les évaluations (ratings)
@@ -34,7 +34,7 @@ class Rating(db.Model):
     comment = db.Column(db.String(255))
     rating = db.Column(db.Integer, nullable=False)
     rating_date = db.Column(db.String(255), nullable=False)
-    song_id = db.Column(db.String(255), db.ForeignKey('songs.Id'), nullable=False)
+    song_id = db.Column(db.String(255), db.ForeignKey('songs.id'), nullable=False)
     user_id = db.Column(db.String(255), nullable=False)
 
     def __init__(self, comment, rating, rating_date, song_id, user_id):

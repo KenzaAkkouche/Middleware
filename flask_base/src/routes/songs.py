@@ -19,9 +19,9 @@ def get_songs():
     return jsonify(SongSchema(many=True).dump(songs_data)), status_code
 
 
-@songs.route('/<Id>', methods=['GET'])
-def get_song(Id):
-    return song_service.get_song(Id)
+@songs.route('/<id>', methods=['GET'])
+def get_song(id):
+    return song_service.get_song(id)
 
 
 @songs.route('/', methods=['POST'])
@@ -39,11 +39,11 @@ def create_song():
         error = SomethingWentWrongSchema().load({})
         return error, error.get("code")
 
-@songs.route('/<Id>', methods=['PUT'])
-def put_song(Id):
+@songs.route('/<id>', methods=['PUT'])
+def put_song(id):
     try:
         song_update = SongUpdateSchema().load(request.get_json())
-        return song_service.put_song(Id, song_update)
+        return song_service.put_song(id, song_update)
     except ValidationError as e:
         error = UnprocessableEntitySchema().load({"message": str(e)})
         return error, error.get("code")
@@ -54,10 +54,10 @@ def put_song(Id):
         error = SomethingWentWrongSchema().load({})
         return error, error.get("code")
 
-@songs.route('/<Id>', methods=['DELETE'])
-def delete_song(Id):
+@songs.route('/<id>', methods=['DELETE'])
+def delete_song(id):
     try:
-        return song_service.delete_song(Id)
+        return song_service.delete_song(id)
     except Exception as e:
         print(f"An error occurred: {e}")
         return jsonify({"message": "Internal Server Error"}), 500

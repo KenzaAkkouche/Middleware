@@ -2,35 +2,35 @@ from marshmallow import Schema, fields, validates_schema, ValidationError
 
 class RatingSchema(Schema):
     comment = fields.String(description="Comment")
-    id = fields.String(description="ID")
+    id = fields.String(description="id")
     rating = fields.Integer(description="Rating")
     rating_date = fields.DateTime(description="Rating Date")
-    song_id = fields.String(description="Song ID")
-    user_id = fields.String(description="User ID")
+    song_id = fields.String(description="Song id")
+    user_id = fields.String(description="User id")
 
 class SongSchema(Schema):
-    Id = fields.String(description="UUID")
-    Title = fields.String(description="Title of Song")
-    Artist = fields.String(description="Name of Artist")
+    id = fields.String(description="UUid")
+    title = fields.String(description="title of Song")
+    artist = fields.String(description="Name of artist")
     ratings = fields.Nested(RatingSchema, many=True)
 
 
     @staticmethod
     def is_empty(obj):
-        return (not obj.get("Id") or obj.get("Id") == "") and \
-               (not obj.get("Title") or obj.get("Title") == "") and \
-               (not obj.get("Artist") or obj.get("Artist") == "")
+        return (not obj.get("id") or obj.get("id") == "") and \
+               (not obj.get("title") or obj.get("title") == "") and \
+               (not obj.get("artist") or obj.get("artist") == "")
 
 class BaseSongSchema(Schema):
-    Title = fields.String(description="Title of song", required=True)
-    Artist = fields.String(description="Name of Artist ", required=True)
+    title = fields.String(description="title of song", required=True)
+    artist = fields.String(description="Name of artist ", required=True)
     ratings = fields.Nested(RatingSchema, many=True)
 
 
 class SongUpdateSchema(BaseSongSchema):
     @validates_schema
     def validates_schemas(self, data, **kwargs):
-        if not (("Title" in data and data["Title"] != "") or
-                ("Artist" in data and data["Artist"] != "") or
+        if not (("title" in data and data["title"] != "") or
+                ("artist" in data and data["artist"] != "") or
                 ("ratings" in data and data["ratings"])):
-            raise ValidationError("At least one of ['Title', 'Artist', 'ratings'] must be specified")
+            raise ValidationError("At least one of ['title', 'artist', 'ratings'] must be specified")

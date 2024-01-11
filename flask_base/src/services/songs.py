@@ -17,8 +17,8 @@ def get_all_songs():
     return response.json(), response.status_code
 
 
-def get_song(Id):
-    response = requests.request(method="GET", url=songs_url+Id)
+def get_song(id):
+    response = requests.request(method="GET", url=songs_url+id)
     return response.json(), response.status_code
 
 
@@ -36,33 +36,33 @@ def create_song(songs_register):
     # on ajoute l'utilisateur dans la base de données
     # pour que les données entre API et BDD correspondent
     try:
-        song_model.Id = response.json()["Id"]
+        song_model.id = response.json()["id"]
         songs_repository.add_song(song_model)
     except Exception:
         raise SomethingWentWrong
 
     return response.json(), response.status_code
 
-def put_song(Id, song_update):
+def put_song(id, song_update):
 
     # s'il y a quelque chose à changer côté API
     song_schema = SongSchema().loads(json.dumps(song_update), unknown=EXCLUDE)
     response = None
     if not SongSchema.is_empty(song_schema):
         # on lance la requête de modification
-        response = requests.request(method="PUT", url=songs_url+Id, json=song_schema)
+        response = requests.request(method="PUT", url=songs_url+id, json=song_schema)
         if response.status_code != 201:
             return response.json(), response.status_code
 
     # s'il y a quelque chose à changer côté BDD
     song_model = SongModel.from_dict(song_update)
     if not song_model.is_empty():
-        song_model.Id = Id
-        found_song = songs_repository.get_song_from_id(Id)
-        if not song_model.Title:
-            song_model.Title = found_song.Title
-        if not song_model.Artist:
-            song_model.Artist = found_song.Artist
+        song_model.id = id
+        found_song = songs_repository.get_song_from_id(id)
+        if not song_model.title:
+            song_model.title = found_song.title
+        if not song_model.artist:
+            song_model.artist = found_song.artist
 
         try:
             songs_repository.update_song(song_model)
@@ -71,10 +71,10 @@ def put_song(Id, song_update):
                 raise UnprocessableEntity
             raise Conflict
 
-    return (response.json(), response.status_code) if response else get_song(Id)
+    return (response.json(), response.status_code) if response else get_song(id)
 
-def delete_song(Id):
-    response = requests.request(method="DELETE", url=songs_url + Id)
+def delete_song(id):
+    response = requests.request(method="DELETE", url=songs_url + id)
 
     if response.status_code == 204:
         return {"message": "Song deleted successfully"}, 200
