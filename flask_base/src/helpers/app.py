@@ -4,11 +4,13 @@ from flask_login import LoginManager
 
 from src.helpers import db, app
 from src.models.user import User
+from src.models.song import Song
 from src.schemas.errors import UnauthorizedSchema
 
 
 def config_app():
     # db localisation et nom
+    uri2 = 'sqlite:///./songs.db'
     uri = 'sqlite:///./users.db'
     app.app_context().push()
 
@@ -16,6 +18,8 @@ def config_app():
     # si vous souhaitez gérer une seule session pour vos tests, remplacez par "secret"
     app.config['SECRET_KEY'] = os.urandom(12)
     app.config['SQLALCHEMY_DATABASE_URI'] = uri
+    app.config['SQLALCHEMY_DATABASE_URI'] = uri2
+
 
     db.init_app(app)
 
