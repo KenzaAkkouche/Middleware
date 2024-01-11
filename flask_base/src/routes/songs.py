@@ -16,7 +16,6 @@ songs = Blueprint(name="songs", import_name=__name__)
 @songs.route('/', methods=['GET'])
 def get_songs():
     songs_data, status_code = song_service.get_all_songs()
-    app.logger.info(f"Response from API Go: {songs_data}")
     return jsonify(SongSchema(many=True).dump(songs_data)), status_code
 
 
